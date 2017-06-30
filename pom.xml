@@ -3,4 +3,13 @@
   <groupId>com.che.demo</groupId>
   <artifactId>myProject</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  
+  <dependencies>
+  	
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>4.0</version>
+		</dependency>
+  </dependencies>
 </project>
