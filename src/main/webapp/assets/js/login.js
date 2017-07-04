@@ -1,25 +1,17 @@
 $(function(){
 	$("#mid").on("blur",function(){
-		validateMid();
+		validateEmpty("mid");
 	});
 	$("#password").on("blur",function(){
-		validatePassword();
+		validateEmpty("password");
 	});
 	$("#loginForm").on("submit",function(){
-		return validateMid() && validatePassword();
+		return validateEmpty("mid") && validateEmpty("password");
 	})
 })
 
-function validateMid(){
-	return validateEmpty("mid");
-}
-function validatePassword(){
-	return validateEmpty("password");
-}
-
-
 function validateEmpty(eleId){
-	if($("#" + eleId).val ==""){
+	if($("#" + eleId).val() ==""){
 		$("#" + eleId + "Div").attr("class","form-group has-error");
 		$("#" + eleId + "Span").html("<span class='text-danger'>该字段不能为空</span>");
 		return false;
@@ -29,4 +21,6 @@ function validateEmpty(eleId){
 		return true;
 	}
 }
+
+
 

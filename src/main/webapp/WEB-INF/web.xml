@@ -12,4 +12,14 @@
 	<welcome-file-list>
 		<welcome-file>/view/index.jsp</welcome-file>
 	</welcome-file-list>
+	
+	<servlet>
+		<servlet-name>MyServlet</servlet-name>
+		<servlet-class>com.che.demo.time2017.D103_MyServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>MyServlet</servlet-name>
+		<url-pattern>/hello.html</url-pattern>
+	</servlet-mapping>
 </web-app>
