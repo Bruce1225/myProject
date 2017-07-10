@@ -1,11 +1,11 @@
 package com.che.demo.iterator;
 
-public class ArrayList {
+public class ArrayList implements Conllection{
 	
 	private int size = 0;
 	private Object[] os = new Object[3];
 
-	public Object[] add(Object o){
+	public void add(Object o){
 		if(size >= os.length){
 			Object[] newO = new Object[os.length * 2];
 			System.arraycopy(os, 0, newO, 0, os.length);
@@ -13,42 +13,34 @@ public class ArrayList {
 		}
 		os[size] = o;
 		size ++;
-//		print(os);
-		return os;
 	}
 	
-//	private void print(Object[] os){
-//		StringBuilder sb = new StringBuilder("");
-//		for(Object o : os){
-//			if(o == null) continue;
-//			sb.append(o.toString());
-//		}
-//		System.out.println(sb);
-//	}
-//	
-	public static void main(String[] args) {
-		ArrayList al = new ArrayList();
-		al.add("hello01");
-		al.add("hello02");
-		al.add("hello03");
-		al.add("hello04");
-		
-	}
-	
-	public int getSize() {
+	public int size(){
 		return size;
 	}
-
-	public void setSize(int size) {
-		this.size = size;
+	
+	public boolean hasNext(){
+		return size > os.length;
+	}
+	
+	public Object next(){
+		return null;
 	}
 
-	public Object[] getOs() {
-		return os;
+	public Iterator getIterator(){
+		return new ArrayListIterator();
 	}
-
-	public void setOs(Object[] os) {
-		this.os = os;
+	
+	private class ArrayListIterator implements Iterator {
+		private int currentIndex = 0;
+		
+		public boolean hasNext(){
+			return currentIndex <size;
+		}
+		
+		public Object next(){
+			return os[currentIndex++];
+		}
 	}
 
 }
