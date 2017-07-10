@@ -1,0 +1,7 @@
+
+--CMS
+	1,cms初始化时版本过低问题
+		update t_dx_trusted_client
+		set app_version = '0.0.0'
+		where id = 48
+	2
