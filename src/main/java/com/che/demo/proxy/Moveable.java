@@ -1,5 +1,7 @@
 package com.che.demo.proxy;
 
-public class Moveable {
+public interface Moveable {
+	
+	void move();
 
 }

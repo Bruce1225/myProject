@@ -1,7 +1,60 @@
 
---CMS
-	1,cms初始化时版本过低问题
-		update t_dx_trusted_client
-		set app_version = '0.0.0'
-		where id = 48
-	2
+--CMS-----------------------------------------------------------
+	2017-07-05 本地初始化，当前版本过低
+		1，当前客户端的版本比服务器中记录的版本低，从而不可初始化，需联系相关人员
+		> 解决方案：因为是本地测试，所以可直接将本地服务器数据库中表t_dx_trusted_client.app_version设成'0.0.0'
+	
+	2017-07-07 门店128570_S30连接被拒
+		1，select top 3 uuidAndPath, * from InitLog where storeCode = '128570_S**' order by id desc
+		2，select top 3 MACHINE_ID, * from RegistLog where STORE_CODE = '128570_S**' order by id desc
+		> 发现2017-07-04 20:09，在另一台电脑上初始化，从而使表RegistLog.MACHINE_ID与该门店磁盘中的uuid不一致，导致门店状态为“连接被拒”
+		> 解决方案:将2017-07-04 20:09-2017-07-07的订单在客户端现导出，再初始化，然后将导出的订单补录。
+	
+	
+	2017-07-11门店公告阅读状态上传不了
+		方案:更新门店本地数据结构,即表SYNC_MESSAGE.message长度
+		步骤:做个升级包，更新相关安装包
+		1,升级包修改
+			(1)获取之前升级包，并修改名称为“fix2017.07.11.zip”.
+			(2)替换Client.jar文件，(如何得来?)
+			(3)找到文件“Client.jar\META-INF\MANIFEST.MF”,修改Implementation-Version: 2017.07.11;
+			(4)修改文件"build.xml",此步为升级包的核心内容,主要逻辑代码有两点
+				I, 更改表字段长度 
+					alter table SYNC_MESSAGE alter column message varchar(max);
+				II,更新公告表的七条问题数据的阅读状态,再由触发器向表SYNC_MESSAGE插入此更新记录,从而再通过SYNC_MESSAGE完成门店本地此7条数据的阅读状态上传到服务器
+					update T_INF_HQ_INFORMATION set is_read = is_read where serverID in(517,518,519,520,521,522,523);
+			(5)注:若为本地服务器测试,则需修改“Client.jar\client.properties"文件,对应配置
+				serverAddress=cm.dulux.com.cn
+				errorEventUrl=https://cm.dulux.com.cn/errorEvent.do
+				dataUrl=https://cm.dulux.com.cn/cms-data/
+				
+				serverAddress=localhost
+				errorEventUrl=http://localhost/errorEvent.do
+				dataUrl=http://localhost:8070/cms-data/
+			(6)将升级包放入目录"E:\CMS_Server\Server\server-download\public"下,此目录配置于
+				项目路径cms-data\WEB-INF\classes\upload.properties.downloadPath.
+			(7)一分钟后,连线门店可检测到新版本,重启后,会执行升级包中build.xml文件,从而修改本地数据库相关字段.
+		2,安装包更新
+			(1)更改"db\idmp.h2.db"文件至最新数据结构.
+			(2)安装包需保持最新,即想要最新QQ,除了升级外,也可直接从QQ服务器端下载安装包,此安装包务必为最新版本.
+			
+	
+	com.riz.cms.data.H2Trigger
+		.
+--cms-data-------------------------------------------------------
+	com.riz.cms.data.servlet.SyncServlet
+		.parseForMD5	
+	
+
+
+
+
+
+
+
+
+--当 IDENTITY_INSERT 设置为 OFF 时，不能为表 'T_INF_HQ_INFORMATION' 中的标识列插入显式值
+set IDENTITY_INSERT T_INF_HQ_INFORMATION on
+insert into T_INF_HQ_INFORMATION(id)
+values(513)
+set IDENTITY_INSERT T_INF_HQ_INFORMATION off
