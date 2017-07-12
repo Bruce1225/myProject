@@ -37,7 +37,10 @@
 		2,安装包更新
 			(1)更改"db\idmp.h2.db"文件至最新数据结构.
 			(2)安装包需保持最新,即想要最新QQ,除了升级外,也可直接从QQ服务器端下载安装包,此安装包务必为最新版本.
-			
+		3,测试
+			(1)cms-data打war包,放入tomcatwebapp中,再启动tomcat,脱离eclipse启动.
+		
+		
 	
 	com.riz.cms.data.H2Trigger
 		.
