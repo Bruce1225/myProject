@@ -37,3 +37,29 @@ sp_MSforeachtable @command1 = 'TRUNCATE TABLE ?'
 	--eps导出优化中，发现connectionPool，原因为分页中orderBy createTime。 通过执行计划分析，数据假造的，createTime大多一致，导致查询速率极慢，将其去掉速度很快！
 		--结论，sql语句中分页的排序选择要慎重。
 
+
+--20170818------------------------------
+	--截取出字符串中的汉子
+	ALTER function [dbo].[m_getSubstringBySelf]
+	(
+	    @string nvarchar(max)
+	)
+	returns varchar(100)
+	as
+	begin
+	    while patindex('%[^吖-咗]%',@string) > 0
+	    begin
+	       set @string = stuff(@string,patindex('%[^吖-咗]%',@string),1,N'');
+	    end
+	    return @string
+	end
+	select dbo.[m_getSubstringBySelf]('China2009中国HRB4-1v')
+	--截取出字符串之引申
+	declare @maco varchar(100), @patindex int
+	set @maco = 'China2009''''中国HRB4-1_v'
+	set @patindex = patindex('%[^a-z0-9中国-]%',@maco)
+	select 
+		@maco,
+		@patindex
+		, STUFF(@maco, @patindex,1,'XX')
+

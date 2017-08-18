@@ -40,7 +40,72 @@
 		3,测试
 			(1)cms-data打war包,放入tomcatwebapp中,再启动tomcat,脱离eclipse启动.
 		
-		
+	2017-07-14门店id=48初始化异常
+		1，查看日志，
+			Unique index or primary key violation: "PRIMARY_KEY_D5 ON PUBLIC.T_SO_SALES_ORDER(ID)";
+		2，服务器端查看
+			(1)select store_pk from T_SO_SALES_ORDER where store_id = 48 group by store_pk having count(1) > 1	存在
+					|--delete id 后来的那行记录
+			(2)select store_pk from T_SO_SO_LINE where store_id = 48 group by store_pk having count(1) > 1		不存在
+			(3)select store_pk from T_SO_SO_LINE_Item where store_id = 48 group by store_pk having count(1) > 1	存在
+					|--update T_SO_SO_LINE_Item set store_pk = min(store_pk) -1 where source <> 'Client'
+		注：此类问题丢给小杨
+	
+	2017-07-26门店(443349_S31)初始化工作异常
+		1，查看日志
+			java.util.concurrent.ExecutionException: java.lang.NullPointerException
+		2，查看服务器数据库，发现
+			该家门店版本为2017.07.11
+		3，远程门店发现
+			该家门店当前版本为2017.04.05
+		结论：门店的版本只能升，不能降
+		解决方案：让小陈给门店一个版本大于2017.07.11，再让门店初始化
+				
+
+	2017-08-08门店(162802_S31)初始化工作异常
+	1，报错日志
+		2017-08-08 14:37:03 com.riz.cms.ui.panel.dlg.DlgInitializeDocByHttp$1$1.done(DlgInitializeDocByHttp.java:183) FATAL => 初始化工作异常
+		java.util.concurrent.ExecutionException: javax.xml.stream.XMLStreamException: ParseError at [row,col]:[1,546607]
+		Message: Connection reset
+	2，尝试，在本地连接正式环境，并用此门店初始化，结果初始化成功
+	3，解决方案1，让小陈给门店最新版本cms，再重新初始化，任然初始化失败
+	4，远程门店，在cmd中输入 "ping cm.dulux.com.cn -t"，发现门店端网络不畅。
+	5，解决方案2，门店自行解决网络问题
+
+	
+	2017-08-14门店(458096_S30)扫描13位产品码后，需要手动点击右边放大镜，左边框才会出现产品
+	1，没有相关报错日志
+	2，初步判断为该门店扫描枪不带回车
+	3，测试扫描枪是否带回车，打开任意文本文件，然后扫描产品码，看光标是否换行
+	4，确认扫描枪问题(不带自动换行)，设置成换行，不行就换。
+	
+	
+					
+
+	2017-08-15门店(555867_S30)初始化工作异常
+	1，报错日志
+		2017-08-15 09:27:02 com.riz.cms.ui.panel.dlg.DlgInitializeDocByHttp$1$1.done(DlgInitializeDocByHttp.java:183) FATAL => 初始化工作异常
+		java.util.concurrent.ExecutionException: java.net.SocketTimeoutException: Read timed out
+	2，正式库中查询：select top 10 * from t_so_so_line_item 发现很慢，有门店正在上传数据
+	3，解决方案：让门店等1小时再重新初始化
+	
+	
+
+--数据库的几张表-----------------------------------------------------------	
+	select top 10 * from t_dx_trusted_client
+	select top 10 * from CLIENT_UPLOAD_MESSAGE_LOG
+	select top 10 * from RegistLog
+	select top 10 * from ConnectLog
+	select top 10 * from InitLog
+	select top 10 * from InitConfig
+	select top 10 * from sequencecounter_store
+	
+	
+下发：存储过程
+上传：cms-data.syncServlet
+	
+	
+	
 	
 	com.riz.cms.data.H2Trigger
 		.
@@ -61,3 +126,10 @@ set IDENTITY_INSERT T_INF_HQ_INFORMATION on
 insert into T_INF_HQ_INFORMATION(id)
 values(513)
 set IDENTITY_INSERT T_INF_HQ_INFORMATION off
+
+
+--134042_S30漏接收134042_S31发起的代发货。
+	1, cms-data:	com.riz.cms.data.servlet.ShipmentOrderServlet
+	2, client:		com.riz.net: Shipment.run
+
+
