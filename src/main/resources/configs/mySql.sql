@@ -56,10 +56,28 @@ sp_MSforeachtable @command1 = 'TRUNCATE TABLE ?'
 	select dbo.[m_getSubstringBySelf]('China2009中国HRB4-1v')
 	--截取出字符串之引申
 	declare @maco varchar(100), @patindex int
-	set @maco = 'China2009''''中国HRB4-1_v'
-	set @patindex = patindex('%[^a-z0-9中国-]%',@maco)
+	set @maco = 'China2009''''中[国HRB4-1_v che'
+	set @patindex = patindex('%[^''a-z0-9中国-]%',@maco)
 	select 
-		@maco,
+		@maco, REVERSE(@maco) '逆向',
 		@patindex
 		, STUFF(@maco, @patindex,1,'XX')
+		, CHARINDEX('SQL','Microsoft SQL Server',10) '从第10位开始搜索,返回匹配的下标'
+		, patindex('%h[a,r]%',@maco)			'h匹配,2个单引表示1单引,汉字也占一位,所以14'
+		, PATINDEX('%[A,Z,0-9]%','XYZABC123')	'包含字母A,Z或任何數字,返回首次匹配的下标'
+		, PATINDEX('_[^H]%',@maco)				'判断第二个字符是否为h,返回1表示是,0为否'
+		, substring(@maco,charindex(' ',@maco)+1 ,len(@maco)) as LastName
 
+
+--20170822脚本方式设置某张表的id自增--------------------------------------------
+1,首次先手动在企业管理器中设置ID为自增
+2,可通过下列语句设置(非首次)
+	SET IDENTITY_INSERT T_myT off
+	SET IDENTITY_INSERT T_myT ON
+		
+		
+		
+		
+		
+		
+		

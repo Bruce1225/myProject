@@ -1,0 +1,722 @@
+
+/*
+
+	AN-sha Newoffice
+
+	荣乐东路536号
+	
+	数据库：
+	SDOVN078	windows身份登录(cms11)			SDOVN094.d30为测试环境数据库 
+		select * from InitConfig
+		select * from RegistLog
+
+	门店131470_S32
+	连接被拒，9-26到10-25
+	服务器端显示 最后连线10-25，但9-26到10-25没有销售单
+
+	初始化，先删除本地数据，再同步服务器数据下来？
+		|--是的
+	客户端连接被拒，服务器端能显示此次连线时间？
+		|--能
+	这种情况需要初始化吗？
+		|--不能，本地数据会丢失
+	为什么会连接被拒？
+		|--可能是UUID值不匹配
+*/	
+
+报表数据库以大服务器为准
+
+ 报表统计尽可能全部转用表vw_t_SOLine2
+
+
+退货问题
+	|--以时间统计的报表
+		|--Rebate计算清单、订单明细查询(ListPrice)、小区统计、销售数据统计(月报)、销售数据统计
+			
+	|--以销售单统计的报表
+		|--运行报告、销售总览*5、销售单查询、销售单明细查询、
+20170620		|--销售总览只有生产力考虑tuihuo？？？
+20170711			|--no 总览都考虑tuihuo
+
+	|--没有计算tuihuo金额的报表
+		|--店长周记等
+
+SO.CreateTime(其它报表用的字段为：SOOperationTime)
+	|--单据抽查,Rebate计算清单
+			
+----2015-08-03------------------------------
+1，系统使用统计报表
+	统计--登录次数，什么时间访问什么模块(select * from AccessLog)
+	用户名--登录次数--第一次访问时间--最后次访问时间--访问模块
+	
+	查询条件：
+		用户名--输入框模糊匹配
+		时间范围
+		访问模块
+	
+2，销售明细增加店员列表
+	店员，产品 的统计
+	
+3，销售总览-产品
+	查询条件添加区域
+	下拉多选(再议)
+
+4，几张销售总览
+	有柱状，有曲线则默认隐藏曲线
+	
+5，t_sap_prod_type
+	字段prod_type_desc直接存放中文名
+	
+6，销售总览-购买力
+	消费者总数和有效消费者的区分
+	后者为(Distinct)
+
+	
+	
+7，销售数据统计添加自定义年月日
+	现有名称改为销售数据统计-月报
+	新增销售数据统计，通过时间筛选，一家门店只占一行
+
+8，小区信息质量报表
+
+9，销售总览
+	添加区域维度添加组织(经销商、分销商)
+	
+	三张饼图调整成一张柱状占比图(颜色区分)，其它总览的饼图也做相同调整
+	
+10，总览 面包线到组织时
+	集团(用此结构)
+	|--门店
+	|--批发
+
+	集团
+	|--经销商
+	|--分销商
+	|--批发商
+
+	集团(暂且不用)
+	|--经销商组织
+		|--经销商
+		|--总仓
+		|--组织批发
+	|--分销商组织
+
+11，总览-产品
+	添加销售模式
+		|--门店零售
+		|--总部批发
+		|--总部分销
+	总览报表同理
+
+12，总览-购买力(批发)
+	新增数据分析(销售总览-购买力-批发)，现有的改为(销售总览-购买力-零售)，销售模式为批发，图表为柏拉图
+	面包线--组织直接到批发客户
+
+13，总览-生产力
+	保持现状(只统计零售)
+
+14，库存报表
+	去掉门店名称列
+	添加面包线
+	区-省-市-组织
+				|--门店仓
+				|--总仓
+
+15，库存查询
+	仓库名称放在首列
+	权限暂时收回
+	
+16，成交价报表
+	添加销售模式筛选条件
+
+17，销售单查询
+	门店列名称改为 集团/门店
+	添加销售模式筛选条件(默认全部)
+			|--零售
+			|--批发
+
+18，运行报告
+	添加销售模式筛选条件(单选，默认零售)，批发和分销没有上传率
+	门店列名称改为 集团/门店
+	
+***	销售模式(零售、批发)筛选条件
+	分销商组织功能暂缓
+	
+
+
+使用vw_t_SalesOrder的表：
+	小区统计、销售数据统计、销售数据统计(月报)、销售单查询、店长周记、运行报告
+
+使用vw_t_SOLine的表：
+	Rebate计算清单、销售总览 * 4
+	
+使用vw_t_SOLine2的表：
+	订单明细查询
+	
+使用vw_t_SOLineListPriceFact的表
+	订单明细查询(ListPrice)
+	
+不需因“销售模式”而改动、但需过滤数据的报表
+	|--视图：生成力、
+	|--查询语句：Rebate、销售数据统计*2、店长周记、小区统计(Src_ID is not null)
+	
+-------2015-09-16--------------------	
+	部分SQL语句有改动(00000000000002.sql)
+	权限acl
+O		|--store 添加 and salesModel = 1
+		|--
+O	总部,组织都改为集团
+	所有有销售模式的报表统计，导出Excel时添加 “销售模式”列，界面不显示，Excel列头：门店/集团
+O		|--运行报告、销售数据统计*2、ListPrice、销售单查询、销售单明细查询
+O	所有销售模式，默认为门店零售
+			|--销售总览、产品、成交价、销售单查询、销售单明细查询、ListPrice、运行报告
+
+
+门店--门店客户	等同	集团--批发分销
+		|--数据结构改动的表：
+O			|--vw_t_SalesOrder(数据的改动--修改视图)
+O			|--vw_t_SOLine数据暂且不改动，添加字段distributorCompany...	(视图已改，表及同步同改)
+					|--vw_t_SOLine.distributorName  转化成其它表的 store.CustomerName  (同理Code)
+O			|--vw_t_SOLine2(数据的改动--修改视图，storeId表示storeId或companyId;customerId表示customerId或distirbutorId;同理code、name)
+O			|--vw_t_SOLineListPriceFact
+O			|--vw_storeAndDistributor 改为 vw_t_storeAndCompany， 数据相应改动 
+		|--销售模式改动的统计报表：
+			|--销售单查询(vw_t_SalesOrder)
+			|--销售单明细(vw_t_SOLine2)
+			|--ListPrice(vw_t_SOLineListPriceFact )
+					|--语句中left join vw_t_storeAndCompany，故只需对表vw_t_storeAndCompany做数据改动
+					|--改用表 vw_t_SOLine2 ？？ 不可, vw_t_SOLine2字段太多
+			|--运行报告(vw_t_SalesOrder,vw_t_storeAndCompany，)
+
+	系统模块
+O		|--视图 like 改为  = 
+?		|--请购...
+		
+O	销售单查询(同理其它报表)
+		|--客户类型改为“门店客户类型”
+				|--销售单查询、销售单明细查询
+				|--零售购买力界面不改了
+		|--销售类型改为“门店销售类型”
+				|--销售单查询、销售单明细查询、运行报告
+		
+O	销售数据统计
+		|--添加销售模式(不统计分销)
+		|--同理(月报)
+	
+	销售明细(列名动态，根据销售模式)
+O		门店/集团(编号+销售单号) 
+			|--页面不显示，导出需要
+O		店员
+			|--业务员 显示报单人名称(批发、分销)
+					|--vw_t_SOLine添加字段RBCreateByUserId,RBCreateByUserName,RBCreateByUserRealName
+					|--vw_t_SOLine2表不动，数据结构(视图)改动
+			|--店员 显示名称(零售)？
+		门店/集团(编号/名称)
+			|--集团(批发、分销) 显示名称; 门店	显示编号、名称 其它界面同理
+O					|--运行报告、销售单查询、销售明细查询、ListPrice、销售数据统计*2
+		数据 09.00	?
+	
+	销售总览
+O		|--柱状图两个 放一行
+O		|--销售模式未对趋势图删选？
+O		|--销售总览，集团分销不做统计(同理还有：总览-产品、购买力*2、生产力、成交价、ListPrice、销售数据统计*2、运行报告)
+O							|--销售总览*n 数据同步时直接过滤掉salesModel = 3
+O		|--销售单查询需做分销统计
+?			|--(销售单明细查询)目前保留
+O		|--面包线结构
+		|--进店人数(图的刻度单位等问题！！！)
+		
+	生产力
+？		|--添加销售模式
+		
+	成交价
+O		|--首列改为产品编号(sku)，(产品编号-产品名称-产品线)
+O		|--搜索条件添加产品sku(自动搜索，等于非like)、产品线
+!		|--产品编号与sku一一对应？？
+					|--不是
+	
+	 库存报表
+O		|--列表：区域-产品线-产品编号-产品名称-...
+O		|--添加产品线(搜索条件)
+!		|--产品编号或名称(搜索条件)
+O		|--第一列、二列交换		
+O		|--搜索条件-产品自动查找(仓库同理)
+O		|--SOUTH -- 北京 ？？
+		
+!	销售数据统计(月报)
+		|--改为“销售月报”
+		
+O	消费者信息统计
+		|--消费者信息有效性统计
+			|--改为报表查询，vw_t_SalesOrder添加字段CustomerPhoneValid、CustomerNameValid
+!		|--统计数据截止时间:  哪里来的？？？
+				|--小区信息统计、小区信息查询
+
+	
+O	小区信息统计
+		|--搜索条件添加下拉框“城级”(select distinct Tier from City)
+		|--只统计被小区覆盖的门店
+				|--vw_t_store、vw_t_storeAndCompany、vw_t_SalesOrder添加字段isCoverByCommunity
+		|--总计
+			|--一行数据？
+		
+		
+	批发购买力
+O		|--加两个图(参考零售到门店)
+!		|--面包屑到Group，统计批发商(用的字段为storeId，非customerId)
+	
+	3(13)，锁定数据(只统计门店零售)		
+		|--统计当前选择月份的有上传数据(销售单、退货单)的门店的数据
+		|--单店均产
+				|--
+		|--门店类型(搜索条件,单选)
+	
+	
+	
+	面包屑结构：
+	原先：	..-City-TradeRoot-Store
+	
+	总览：	..-City-Group-Store/WholesalerTotal(批发一条)
+	库存：	..-City-Group-Warehouse
+	批发购买力：	..-City-Group
+	零售购买力：	..-City-Group-Store
+	生产力(原先)：	Malon-..-SalesName-TradeRoot-StoreManager-Employee
+	生产力(现在)：	Malon-..-SalesName-Group-StoreManager-Employee
+	
+	
+	
+	
+	
+--------我--是--分--割--线-----------------------------------------------------------
+	
+关于tradeRoot.transferFinanceConfirm = 1 现有逻辑
+
+财务界面--
+调拨单(门店/总仓)：	验证则表示需要财务确认
+请购单(财务界面)：	不需验证，需要财务确认分单		
+发货退货清单：		不需验证，需要财务确认
+
+
+仓管界面--
+调拨单				不需验证，直接关联表t_order_owner(T_ST_MOVE_BILL a inner join t_order_owner b on a.ID = b.objId and b.objClass = 'moveBill')
+总仓调拨			未验证tradeRoot.transferFinanceConfirm = 1 ？
+请购单：			财务拆分的单
+发货退货查询：		财务确认的单
+
+	
+	
+----2015-10-16---------------------
+小区信息统计、消费者信息统计
+	|--报表及其导出，所用数据库
+	|--小区查询慢，相关索引缺失(vw_t_SalesOrder)
+O				|--添加索引
+O				|--vw_t_SOLine2
+O				|--vw_t_systemUseModular时间
+O				|--vw_t_warehouse
+O				|--vw_t_Inventory
+O				|--tbemployee
+	AclUtil.java
+	
+	
+	运营管理...
+		|--导出，
+			|--列头问题
+O			|--运营管理
+！			|--默认上个月(3月31号) 问题
+				|--先设置本月第一天，后设置月份减1
+！！		|--上传率问题
+		|--权限
+		|--总计--with as
+			|--分页
+		|--time '-01 23:59:59.997'
+		|--INULL(,0)
+		|--运营管理(合计)
+		|--st.StoreAppVersion >= '2015-01-01 00:00:00.000'
+				|--改为 st.StoreAppVersion >= '2015.01.01'
+		|--修改了几个聚集索引
+	
+	store_traffic
+		|--vw_t_SalesOverview 添加字段DayOfThursday(datetime)
+			set DayOfThursday = 
+				case when datepart(weekday,SOOperationTime) = 1 
+					then DATEADD(d, 5 - datepart(weekday,SOOperationTime) - 7,SOOperationTime)
+					else DATEADD(d, 5 - datepart(weekday,SOOperationTime),SOOperationTime) 
+				end
+		|--新建表vw_t_SalesOverviewToStoreTraffic
+			select
+				max(),
+				sum(),
+				''
+			from vw_t_SalesOverview
+			where --SOOperationTime between '2012-01-01 00:00:00.000' and getDate() and 
+				salesModel = 1 
+			group by storeId, DayOfThursday
+		|--vw_t_SalesOverviewToStoreTraffic
+					|--计算：第一周周四(datetime)，最后周周四(datetime)，本月周数(tinyint)，当前第几周(tinyint)
+		|--storeType,storeTypeCode
+		
+		|--2014和2015同月的周数不等
+	
+	
+------2015-10-29-------------------------------------------------------------------------------------	
+	数据分析
+		|--禁用的门店也要统计
+O				|--添加筛选条件
+O				|--注意单店均产
+O			|--销售总览
+O			|--销售总览-产品
+O			|--销售总览-零售购买力
+X			|--销售总览-批发购买力
+!			|--销售总览-生产力
+	
+	
+	
+------2015-11-10-------------------------------------------------------------------------------------------	
+
+O	数据分析 改为 销售总览
+O	报表统计 改为 数据明细
+O	添加 渠道月报(运行报告汇总、)
+!			|--筛选条件 参考 运行报告明细
+					|--CMSStatus;版本号;
+					|--门店类型:DDCN DSCC DIS;
+					|--门店销售类型
+O						|--soType or salesType ?	
+								|--soType
+						|--运行报告汇总(条码率的过滤)
+O							|--vw_t_SOLineItem 添加字段销售类型(脚本)
+O							|--同理运行报告明细
+
+	阿克苏/第三方
+O		|--	vendorId = 1 
+			|-- 所有统计销售额的报表添加筛选条件
+				|--只能从vw_t_SOLine(2)中统计
+					|--update vw_t_Product set productVendorId = 0 where productVendorId != 1
+O					|--vw_t_SOLine(2) 添加字段productVendorId,productVendorCode,productVendorName
+					|--vw_t_ROLine添加字段productVendorId,productVendorCode,productVendorName, ROCreateTime, ROLineCreateTime, ROLineListPrice
+						|--T_SO_RETURN_ORDER(_LINE)改用表vw_t_ROLine的表：
+O							|--Rebate计算清单、
+O							|--订单明细查询(ListPrice)(不用做)、
+O							|--小区统计、
+O?							|--销售数据统计、
+O							|--销售数据统计(月报)
+						|--使用vw_t_SalesOrder改为vw_t_SOLine(2)的表：
+							|--销售单查询(暂且不做)、
+？							|--店长周记、
+O							|--运行报告(明细)、
+								|--含条码单据额..如何统计？
+									|--SOLine,SOLine2添加字段SOAmount
+									|--SOLineItem添加字段productVendorId
+							|--小区统计、
+							|--销售数据统计、
+							|--销售数据统计(月报)
+						|--其它报表
+O							|--运行报告汇总
+O							|--StoreProductivity
+O							|--SPPStoreProductivity
+O							|--门店运营周报
+								|--表vw_t_SalesOverview、vw_t_SalesOverviewToStoreTraffic添加字段productVendorId
+!!!				|--全局变量whereBySOType..有问题
+***				|--mergesql.java与00000000002.sql不一样(如：salesModel等)，故替换时好好对比
+				
+？	退货以时间动态计算
+		|--添加合成表vw_t_ROLine   (字段productVendorId, soType, storeBrand...)
+		|--退货明细 和 销售明细 之间联系？
+O		|--相似问题，时间用SOOperationTime or SOCreateTime 
+			|--用SOOperationTime
+		|--合成表vw_t_ROLine问题
+			|--roLine.storeId != soLine.storeId 用roLine.storeId
+			|--是否存在roLine.storeId is null的数据
+				|--应该不存在，因为批发及分销 的退货单存在于表 T_SALES_REQUEST_BILL_RETURN
+o			|--ro.employeeId = so.employeeId  
+				|--可以理解
+o			|--ro.customerId = so.customerId 
+
+o			vw_SOLineReturnLine中roLine.slip_id = so.id
+!!			select 
+				soLine.SO_ID, soLine.ARTICLE_ID, COUNT(1)
+			from T_SO_SO_LINE soLine inner join
+			T_SO_SALES_ORDER so on so.OPERATION_TIME between '2013-01-01' and GETDATE() and soLine.so_id = so.id 
+			group by soLine.SO_ID, soLine.ARTICLE_ID
+			having COUNT(1) > 1
+			
+			select 
+				soLine.RO_ID, soLine.ARTICLE_ID, COUNT(1)
+			from T_SO_RETURN_ORDER_LINE soLine inner join
+			T_SO_RETURN_ORDER so on so.RETURN_TIME between '2013-01-01' and GETDATE() and soLine.RO_ID = so.id 
+			group by soLine.RO_ID, soLine.ARTICLE_ID
+			having COUNT(1) > 1
+			
+		select top 1 * from T_SO_RETURN_ORDER
+		select top 1 * from T_SALES_REQUEST_BILL_RETURN
+
+		select top 1 * from T_SO_RETURN_ORDER_LINE
+		select top 1 * from T_SALES_REQUEST_BILL_RETURN_LINE
+		select top 1 * from T_SALES_REQUEST_BILL_RETURN_LINE_ITEM		
+			
+			
+			
+	
+	运行报告汇总
+		|--上传率问题(仔细核对)
+	
+	YTD问题(连线门店数量 = count(01) + count(02) + ... )
+O		|--StoreProductivity  
+			|--检测
+		|--SPPStoreProductivity
+			|--数据校验不正确
+				|--vw_t_SalerOrder统一改用vw_t_SOLine2  ??
+		
+			
+			
+		|--	storeTrafficWeekly(门店运营周报)
+				|--YTD计算逻辑 不对
+???				|--统计连线门店数量 ？？？？？？？？？
+					|--整月的，则统计整月连线数;最后月若为分开周，则统计整周连线数
+						|--ConnectLog(不需要计算分母WeeksTotal了)
+							|--添加字段DayOfThursdayForStoreTraffic、DayOfFirstWeekForStoreTraffic、NumberOfWeeksForStoreTraffic
+				
+			(连线门店数量)
+			|--门店数量统计逻辑
+				|--只统计有销售单的门店的数量
+
+		
+		
+	
+	
+	
+	
+	有空做
+		|--报表的查询条件排列
+		|--000000000002.sql整理(salesModel等问题)
+				|--运行报告汇总、
+	
+	有空看
+		select * from CMS_IDME.dbo.T_SO_SALES_ORDER b inner join
+		CMS_IDME.dbo.T_WH_WAREHOUSE AS ware ON b.SHIPMENT_STORE_ID = ware.STORE_ID AND b.SHIPMENT_WAREHOUSE_ID = ware.STORE_PK
+  
+	
+	退货问题
+		|--SPP不考虑退货
+		|--进店人数
+		|--移动报单退货
+				|--T_SALES_REQUEST_BILL_RETURN合并到T_SO_RETURN_ORDER中，并且srcWarehouseId去掉，因为so.warehouse就是源仓库
+				|--so.line.requestBillReturnQty改为so.line.returnOrderQty
+		|--T_SO_RETURN_ORDER_LINE.shippedQty
+???		|--T_SO_RETURN_ORDER_LINE.slip_id = soLine.id	(参见T_SO_RETURN_ORDER_LINE.xml)
+		
+		|--拆单有问题	exec sp_dboption 'CMS_IDME','ARITHABORT','true'
+	
+		|--生产数据库脚本
+			|--添加表T_SO_RETURN_ORDER_LINE_ITEM
+			|--T_SO_RETURN_ORDER_LINE添加字段remark、shippedQty
+			|--T_SO_RETURN_ORDER添加字段remark;T_SO_RETURN_ORDER.status类型由int改为varchar(50)
+					|--;添加Create_Time表示销售创建时间,return_time表示仓管确认时间,另外原CreateTime设定默认值getDate()
+		|--已修改的报表
+O			|--运行报告明细、运行报告汇总、StoreProductivity、。。。
+		
+		|--由vw_t_SOLine生产的表的字段由vw_t_SOLine.ActualAmount改为vw_t_SOLine.SOLineAmount
+			|--视图已改(总览-生产力 暂缓)
+				|--总览、
+	
+	
+	|--总览、storeTraffic添加soTypeCode
+	
+	
+	
+	
+
+	
+----20151216---------------------------------------------------------------	
+
+1.44添加(O)	
+	StoreProductivity
+		|--语句中vw_t_SOLine2 改由 vw_t_SOLineForMonthReport
+			|--创建视图及表vw_t_SOLineForMonthReport(公司脚本)
+			
+	小区质量报表
+		|--vw_t_Salesorder 添加索引 locationCode,community_Name
+	
+	
+
+----20151221-------------------------------------------------------	
+	
+O	周报
+		|--去年参数错误
+		|--2013年作为今年和去年，数据不一致
+			|--一月份有差异
+	
+	
+
+----20160105邮件--------------------------------------------------
+	
+	统计金额所用字段
+		|--ListPrice:Rebate,销售单明细(ListPrice)
+		|--so.ReceiveAmount:运行报告*2, 销售数据统计*2
+	
+*	进店数有问题
+	
+	连线数量
+		|--类型为DDCN的门店连线数量
+	
+	答复20160105邮件
+		1，计算逻辑两边存在差异，故数据有差异
+			|--四张渠道月报：只统计在该段时间范围内有连线门店的销售数据，类型为('DDCN','DCSS','DIS')门店的销售数据，实际销售额=(该段时间范围内的)销售额-退货额
+			|--销售明细：与是否连线无关，退货额绑定销售明细
+			|--销售数据统计：与是否连线无关，实际销售额=(该段时间范围内的)实收销售额-退货额
+	
+	
+	
+	
+----2016-01-17------------------------------------------------------------------------------------------------	
+	校验
+		|--总览 * 4
+			|--(productType = 1)
+		|--月报 * 4
+			|--增长率
+			|--周报(productType = 1)
+		|--运行报告 * 2
+			|--上传率
+				|--汇总：计算逻辑 = count(distinct storeId_yearWeek)/(东区的门店数 * 11的周数); 
+					|--时间上注意(13年11月范围为'2013-10-27' - '2013-11-30 23:59:59.997'); 
+			|--含条码单据金额率
+				|--计算逻辑 = 含条码实收金额/总实收金额
+					|--分母未扣除退货，是因为分子未扣除退货
+	
+	数据不一致，可能的原因
+		|--南区某几家门店当天关闭了
+		|--select vw_t_SOLine与select vw_SOLine 差异！!
+	
+*?		总览-产品
+			|--ExpressionUtils.and与ExpressionUtils.allOf的区别?
+	
+	
+O?		月报
+	
+	
+**	删选条件： 多乐士，零售，YTDOct
+	
+	
+	
+	
+----20160112-----------------------------	
+	
+o?	1,周报
+		|--去掉是否连线的过滤条件
+		进店数
+			|--(分母)只统计来客数>0的门店的数量
+
+		销售额
+			|--金额取销售单的实际销售金额(退货以绑定销售单)
+			|--(分母)只统计有销售单的门店的数量
+		
+o?	2,storeProductivity * 2
+		|--去掉是否连线的过滤条件
+		|--金额取销售单的实际销售金额(退货以绑定销售单)
+		
+		
+o?	3,销售总览添加"供应商类型"	
+		
+		
+o	4,抹零价 or 折后价
+		统计相关报表 邮件
+	
+o	退货以绑定销售单
+		|--vw_t_SOLineForMonthReport、vw_t_SalesOverviewToStoreTraffic 
+			|--实际销售额取值(soLine.ActualAmount)
+			|--添加字段fromSOorDiary
+	
+o	运行报告汇总
+		|--界面添加"总实收金额"
+	
+*	store st left join
+		|--改为store st inner join 
+	
+	192.168.1.44 -- localhost
+	
+	
+----20160121--------------------------------------------------------	
+cms-ka调整
+O	|--StoreProductivity最后列占比的注释修改
+O	|--周报只统计客户类型为(普通顾客,油漆工,家装公司,家易涂)
+*?	|--销售单实际金额 > 销售明细实际金额 ！？
+		|--退货计算逻辑有问题
+O			|--SOLineReturnLine
+				|--roLine.slipId = soLine.SOId 改为 roLine.slipId = soLine.id
+O			|--报表T_SO_RETURN_ORDER
+				|--添加过滤条件(ISNULL(ro.Type, '') <> 'requestBill') OR
+                      (ISNULL(ro.Type, '') = 'requestBill') AND (ISNULL(ro.STATUS, '') = 'completed')
+	
+	
+	
+o	月报、周报
+		|--添加城级
+			|--A,B,C,D,C+D
+	
+	实收金额
+*o		|--阿克苏产品的实收金额  取 整个订单的实收金额
+	
+	
+	
+----2016-02-18-------------------------------------------------	
+	色彩报表
+		|--色相、明度、饱和度？
+		|--推荐色彩订单数？
+？		|--分母为零
+	237612586 1009559632 425717433 2580245201 1294901224 873470042 838137289 1026522387
+	
+	查询效率
+		|--复合索引的顺序问题
+	
+	
+	色彩涂刷区域统计
+		|--导出报错
+			|--productVol is null
+	
+	
+	
+注：
+	select [ID]
+	from CMS_IDME.dbo.T_SO_RETURN_ORDER ro
+	WHERE (ISNULL(ro.Type, '''') <> ''requestBill'') OR ((ISNULL(ro.Type, '''') = ''requestBill'') AND (ISNULL(ro.STATUS, '''') = ''completed''))
+  
+
+
+
+
+----20170703----------------------------------------------------
+周数计算逻辑
+	|--1，运行报告明细*
+		假设界面的时间范围选择的是2017.07.01 ~ 2017.07.31，则该时间段横跨的周数为六周，分别是：
+			第一周：2017.06.25 ~ 2017.07.01
+			第二周：2017.07.02 ~ 2017.07.08
+			第三周：2017.07.09 ~ 2017.07.15
+			第四周：2017.07.16 ~ 2017.07.22
+			第五周：2017.07.23 ~ 2017.07.29
+			第六周：2017.07.30 ~ 2017.08.05
+		某家门店在2017.06.25, 2017.06.26, 2017.08.04这三天有数据上传，则该时间段该家门店的
+		上传周数 = 2周	(分别是第一周和第六周)
+		再计算出上传率 = 2/6
+	|--2，运行报告汇总*
+		周数的计算逻辑等同于“运行报告明细*”
+	|--3，门店运营周报*
+		(1)，一周的第一天是周一；
+		(2)，一周有四天或以上属于某月，则该周属于该月。
+	
+
+----20170707-----------------------------------------------------
+金额统计
+	|--通过vw_t_SalesOrder
+		|--店长周记 (统计订单金额)
+	|--其它通过vw_t_SOLine2
+
+  
+	
+	ipconfig / renew
+	
+	蚁人(百度知道)
+	|--插件--病毒
+				|--oemuicp.chm
+	
+----2017-08-01 14:04
+	环水
+
