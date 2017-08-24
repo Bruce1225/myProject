@@ -37,4 +37,4 @@
 			B,网站:http://www.lfd.uci.edu/~gohlke/pythonlibs/#scipy,下载scipy对应版本的whl文件
 			C,cmd中运行命令pip install scipy-0.19.1-cp36-cp36m-win_amd64.whl
 	(4)matplotlib安装
-		pip install matplotlib
+		pip install matplotlib 
