@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class D103_MyServlet extends HttpServlet {
+public class D0103_MyServlet extends HttpServlet {
 
 
 	public static final String Driver="com.microsoft.sqlserver.jdbc.SQLServerDriver";

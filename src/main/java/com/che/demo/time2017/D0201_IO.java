@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 //http://blog.csdn.net/wenzhi20102321/article/details/52582705
-public class D201_IO {
+public class D0201_IO {
 	public static void main(String[] args) throws IOException {
 		
 		File file = new File("D:/myFolder");

@@ -38,3 +38,5 @@
 			C,cmd中运行命令pip install scipy-0.19.1-cp36-cp36m-win_amd64.whl
 	(4)matplotlib安装
 		pip install matplotlib 
+		
+		

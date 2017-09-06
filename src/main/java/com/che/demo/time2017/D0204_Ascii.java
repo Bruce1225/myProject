@@ -2,7 +2,7 @@ package com.che.demo.time2017;
 
 import java.util.Arrays;
 
-public class D204_Ascii {
+public class D0204_Ascii {
 
 	public static void main(String[] args) {
 		

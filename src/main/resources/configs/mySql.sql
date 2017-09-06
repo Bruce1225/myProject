@@ -75,8 +75,19 @@ sp_MSforeachtable @command1 = 'TRUNCATE TABLE ?'
 	SET IDENTITY_INSERT T_myT off
 	SET IDENTITY_INSERT T_myT ON
 		
-		
-		
+--20170904_with (nolock)-------------------------------------------
+缺点:
+　　1.会产生脏读
+　　2.只适用与select查询语句
+优点:
+　　1.有些文件说，加了WITH (NOLOCK)的SQL查询效率可以增加33%，如果不需考虑transaction，WITH (NOLOCK)或许是个好用的参考
+　　2.可以用于inner join 语句
+
+例句:
+	SELECT COUNT(UserID) 
+	FROM EMPLOYEE WITH (NOLOCK) 
+	JOIN WORKING_GROUP WITH (NOLOCK) 
+	ON EMPLOYEE.UserID = WORKING_GROUP.UserID
 		
 		
 		

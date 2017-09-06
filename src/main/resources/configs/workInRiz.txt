@@ -90,6 +90,23 @@
 	3，解决方案：让门店等1小时再重新初始化
 	
 	
+	2017-08-25门店(166439_S31)初始化异常
+	1，报错日志
+		Unique index or primary key violation: "FKDA476173B9ED25FD_INDEX_C ON PUBLIC.T_SO_SO_LINE(ID)"
+	2，正式库中查询
+		select store_pk, count(1) cc from t_so_so_line soLine
+		where store_id = (select id from t_ma_store where code = '166439_S31')
+		group by store_pk
+		having count(1) > 1
+	3，发现两条soLine，除了id相差少许和createtime相差3毫秒外，其它字段都相同，并且都没有对应的soLineItem
+	4，删除后来的soLine，即ID小的
+	
+	2017-08-28门店(133047_S30)初始化异常
+	1，报错日志
+		Unique index or primary key violation: "FKDA476173B9ED25FD_INDEX_C ON PUBLIC.T_SO_SO_LINE(ID)"
+	2，store_pk重复
+	3，发现两条soLine相差许多，故不能做删除
+	4，通过观察上下的soLine，将ID为负值的soLine的store_pk更改为上下soLine的store_pk之间的一个值
 
 --数据库的几张表-----------------------------------------------------------	
 	select top 10 * from t_dx_trusted_client

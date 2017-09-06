@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
-public class D203_SendEmail {
+public class D0203_SendEmail {
 
 	private static String HostName="smtp.exmail.qq.com";
 	private static String senderUser="baoxiangyu@riz-tech.com";
