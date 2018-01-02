@@ -9,6 +9,7 @@ public class D0202_Date {
 	public static void main(String[] args) {
 		Long currentDate = Calendar.getInstance().getTimeInMillis();
 		System.out.println(currentDate);
+		System.out.println(new Date().getTime());
 
 		System.out.println(new Date(1502351182141L));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss sss");

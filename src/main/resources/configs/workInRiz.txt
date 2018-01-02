@@ -1,4 +1,26 @@
 
+
+--cms-ka-------------------------------------------------------
+
+	2017-09-07添加计划员planner.do报错404
+		1，问题分析
+			(1)到Tomcat8.0下将文件PurchaseOrder.class反编译，发现没有planner.do;将该文件夹整个删除，再重新在eclipse中右键Tomcat8.0选择clean，发现重新生成的类文件任然没有planner.do.
+			(2)tomcat8下clean生成的文件的源头是workspace/target/classes，而该目录下的PurchaseOrder.class文件就没有planner.do。
+				删除target/classes下所有文件及夹，再再eclipse中选中项目cms-ka,并选择菜单栏Project->Clean,点击OK，发现target/classes不生成com文件
+			(3)选中项目cms-ka,点击菜单栏Project->Properties->Builders->Java Builder,发现该复选框未勾选(或不存在)，故而无法编译新增加的planner.do
+		2，解决方案
+			(1)勾选菜单栏Project->Properties->Builders->Java Builder
+			(2)若(1)中的复选框不存在，则workspace中选择任意正常项目下的.project文件并打开，将其中org.eclipse.jdt.core.javabuilder节选复制到cms-ka目录下的.project文件相应位置。
+		3，再次编译后tomcat8.0下的文件中已经存在planner.do了
+
+
+	2017-12-13Trading邮件测试
+		1，新创建一个项目MailUtilTest，并将cms-ka.com.riz.cms.util.MailUtil.java拷贝到MailUtilTest中。
+		2，将cms-ka/WEB-INF/lib中相关jar包拷贝到MailUtilTest下的新建文件夹lib中，并将jar包add到build path中。
+		3，右键MailUtilTest -> export -> Runnable JAR file 并勾选“Copy required lib..”。
+		4，将导出的MailUtilTest.jar和MailUtilTest_lib一同拷贝到096服务器的桌面temp_files文件夹下。
+		5，096服务器的cmd中，cd到temp_files目录，再“java -jar MailUtilTest.jar 1,wangchenghan@riz-tech.com”并回车，其中参数“1”表示收件人角色为供应商。
+
 --CMS-----------------------------------------------------------
 	2017-07-05 本地初始化，当前版本过低
 		1，当前客户端的版本比服务器中记录的版本低，从而不可初始化，需联系相关人员
@@ -107,6 +129,14 @@
 	2，store_pk重复
 	3，发现两条soLine相差许多，故不能做删除
 	4，通过观察上下的soLine，将ID为负值的soLine的store_pk更改为上下soLine的store_pk之间的一个值
+	
+	2017-12-06门店(132846_S32)无法注册(初始化)，现要在本地链接阿克苏正式环境测试下，步骤如下：
+	1，修改路径C:\myWork\CMS\客户端\CMS\Client.jar中client.properties的DataUrl值为正式环境
+	2，启动程序，点击“数据初始化”，弹出“。。授权到期，无法初始化。。”
+	3，将db文件夹下除“run.bat”外的所有文件，再从安装包中拷贝新数据库文件过来。
+	4，启动程序，点击“数据初始化”，初始化成功；
+	5，再次启动程序，点击“数据初始化”，任然弹出“。。授权到期，无法初始化。。”
+	6，确认该门店的确授权到期，需联系管理员。
 
 --数据库的几张表-----------------------------------------------------------	
 	select top 10 * from t_dx_trusted_client
@@ -148,5 +178,20 @@ set IDENTITY_INSERT T_INF_HQ_INFORMATION off
 --134042_S30漏接收134042_S31发起的代发货。
 	1, cms-data:	com.riz.cms.data.servlet.ShipmentOrderServlet
 	2, client:		com.riz.net: Shipment.run
+
+
+
+
+----20170912--------------------
+问题描述:创建PODeliveryOrder后，保存时，未进入到后台断点；
+问题检查:
+	1,前段页面分析：检查->Network中跟踪，显示报错400；
+	2,百度400， Bad Request 请求中的语法错误。
+检查结果:
+	日期是以字符串格式传入后台，并未转换成日期
+解决方案:
+	实体类中，日期变量前添加 @DateTimeFormat(pattern="yyyy-MM-dd")
+
+
 
 

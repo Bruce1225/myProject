@@ -1,0 +1,7 @@
+
+1,区别
+	form:input 	path
+	input		name
+2,400参数错误
+	实体类中，日期变量前添加 @DateTimeFormat(pattern="yyyy-MM-dd")
+	
