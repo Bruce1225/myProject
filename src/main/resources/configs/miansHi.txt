@@ -1,0 +1,71 @@
+
+
+如今我又来到人生的十岔口，我知道，毫无例外，我都知道，哪条是正途。可我从来都不走，为什么？因为太他妈辛苦了！
+有的鸟儿是注定关不住的，因为他们的羽毛太过锋芒！
+
+	集合、IO流、异常、多线程(同步-并发)
+	SpringMVC、拦截器、过滤器、定时任务、Log4j
+	html、css、JavaScript、JQuery、Bootstrap
+	Mybatis、SQL
+	AOP、IOC、事务
+	jvm、GC
+	git、Maven、tomcat
+	java8
+	
+	
+线程池
+	线程池的实现原理，这个知识点真的很重要，几乎每次面试都会被问到，一般的提问方式有如下几种
+锁的实现
+	在关于锁的面试过程中，一般主要问Synchronized和ReentrantLock的实现原理，更有甚者会问读写锁
+java 8红黑树的概念
+
+
+	
+
+InputStream
+	FileInputStream
+	BufferedInputStream
+OutputStream
+	FileOutputStream
+	BufferedOutputStream
+
+Reader
+	InputStreamReader
+		FileReader
+	BufferedReader
+Writer
+	OutputStreamWriter
+		FileWriter
+	BufferedWriter
+
+
+	自己定义拦截器
+		实现接口,另外一种是继承适配器类 HandlerInterceptorAdapter
+	SpringMvc处理返回值
+		配置文件中InternalResourceViewResolver的前缀和后缀
+	当一个方法向AJAX返回特殊对象
+		加上@ResponseBody注解
+	定时任务Quertz
+		quartz.SchedulerFactoryBean
+	数据库连接池
+		dbcp.BasicDataSource
+	数据库事物
+		transactionManager
+	Mybatis配置
+		SqlSessionFactoryBean
+		
+		
+	
+	springMVC工作流程
+		1，用户发出请求到中央控制器DispatcherServlet
+		2，中央控制器找相应处理器映射器HandlerMapper
+		3，处理器映射器找到处理器适配器，并返回处理器适配器地址信息给中央控制器(如果有处理器拦截器，则一并生成)
+		5，中央控制器找到处理器适配器HandlerAdapter
+		6，处理器适配器经过数据转化、格式化等转交给Handler，即Controller
+		7，Handler处理相关业务，返回ModelAndView给处理器适配器
+		8，处理器适配器将结果返回给中央控制器
+		9，中央控制器将结果返回给ViewReslover
+		10，viewReslover解析后返回具体View到中央控制器
+		10，中央控制器将view渲染响应给用户
+
+	
