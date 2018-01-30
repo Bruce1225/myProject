@@ -193,5 +193,22 @@ set IDENTITY_INSERT T_INF_HQ_INFORMATION off
 	实体类中，日期变量前添加 @DateTimeFormat(pattern="yyyy-MM-dd")
 
 
+----20180126----------------------------------
+业务描述：cms-ka报表导出的csv文件占内存太大，现做一小程序清理文件及对应数据库数据
+具体步骤：
+	1,创建项目cms-clearCsv，完成相关业务逻辑及配置；
+	2,打jar包，可运行jar包；
+	3,创建bat文件，执行jar包；
+	3,创建windows定时任务，每天凌晨2:00执行bat文件；
+	4,查看数据是否已被清理。
+	注：相关路径配置问题
+		(1)数据库配置
+		(2)log4j路径
+		(3)bat中的绝对路径
+实施：联系小徐
+
+
+
+
 
 
