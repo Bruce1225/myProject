@@ -5,7 +5,7 @@
 
 	集合、IO流、异常、多线程(同步-并发)
 	SpringMVC、拦截器、过滤器、定时任务、Log4j
-	html、css、JavaScript、JQuery、Bootstrap
+	html、css、JavaScript、ajax、json、JQuery、Bootstrap
 	Mybatis、SQL
 	AOP、IOC、事务
 	jvm、GC
@@ -53,7 +53,10 @@ Writer
 		transactionManager
 	Mybatis配置
 		SqlSessionFactoryBean
-		
+	IOC
+		传统我们通过new来创建一个对象，现在由spring容器帮我们依赖注入对象，即由原先的人为控制转为容器控制。
+	AOP
+		优点自然还是提高效率，AOP将业务逻辑各部分进行划分隔离，提高程序可重用性。例如通过AOP可将日志、事物等从业务逻辑层抽取出来(省去传统的繁琐)
 		
 	
 	springMVC工作流程
@@ -64,7 +67,7 @@ Writer
 		6，处理器适配器经过数据转化、格式化等转交给Handler，即Controller
 		7，Handler处理相关业务，返回ModelAndView给处理器适配器
 		8，处理器适配器将结果返回给中央控制器
-		9，中央控制器将结果返回给ViewReslover
+		9，中央控制器再找到视图解析器ViewReslover
 		10，viewReslover解析后返回具体View到中央控制器
 		10，中央控制器将view渲染响应给用户
 
