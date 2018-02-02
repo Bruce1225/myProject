@@ -53,6 +53,9 @@ Writer
 		transactionManager
 	Mybatis配置
 		SqlSessionFactoryBean
+	进程和线程
+		进程：是系统分配和管理资源的基本单位，它包含若干个线程
+		线程：是进程的组成部分
 		
 		
 	
