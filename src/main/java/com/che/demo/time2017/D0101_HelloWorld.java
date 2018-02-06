@@ -6,6 +6,9 @@ public class D0101_HelloWorld {
 		System.out.println("hello world!");
 		
 		System.out.println("\u5982");
+//		System.out.println("\u27665");
+//		System.out.println("\u20849");
+		System.out.println(' ');
 	}
 
 }
