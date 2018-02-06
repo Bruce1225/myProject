@@ -72,6 +72,15 @@ IO流
 		配置文件中InternalResourceViewResolver的前缀和后缀
 	当一个方法向AJAX返回特殊对象
 		加上@ResponseBody注解
+	并发、并行区别
+		并发：多个线程被一个CPU执行
+		并行：多个线程被多个CPU执行
+	分布、集群
+		分布：一个业务拆分成若干个子业务，部署在不同的服务器上
+		集群：同一个业务部署在多个服务器上
+	网站高并发性能优化
+		硬件：增加带宽，宽容CPU、扩容内存，
+		软件：合理合并js文件以减少IO读取次数，数据库读取上选用radis缓存
 	定时任务Quertz
 		quartz.SchedulerFactoryBean
 	数据库连接池
@@ -141,12 +150,13 @@ IO流
 				缺点：复制算法中老年代中的对象存活交久，故复制的成本交高；
 			(2)标记整理算法，又叫标记压缩算法，是对老年代的回收。先标记GC roots可达对象，并将这些对象压缩到内存的一端，再对其它区域清理回收
 		4，引申垃圾回收器
-			(1)CMS收集器，基于标记-清除算法，收集范围是老年代。四个步骤：
-				初始标记(initial mark)
-				并发标记(concurrent mark)
-				重新标记(remark)
-				并发清除(concurrent sweep)
-			(2)G1收集器，JDK1.7提供的，基于标记-整理算法，所以没有碎片，收集范围是java堆(包括新生代、老年代)
+			(1)CMS收集器，收集范围是老年代，基于标记-清除算法，故易产生大量空间碎片，分配大对象时不得不full GC。
+			         四个步骤：
+				初始标记(initial mark)			快，stop the world
+				并发标记(concurrent mark)		快，stop the world
+				重新标记(remark)				慢，但可以和用户进程同时工作
+				并发清除(concurrent sweep)		慢，但可以和用户进程同时工作
+			(2)G1收集器，JDK1.7提供的，收集范围是java堆(包括新生代、老年代)，基于标记-整理算法，所以没有碎片
 
 	OSI
 		应用层	Boss		用户
