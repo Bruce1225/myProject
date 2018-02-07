@@ -21,10 +21,36 @@ https://cm.dulux.com.cn/login.jsp
 	
 	
 	
+	做过的项目
+		Trading， 平安汽融
 	Object常用方法：
 		equals,hashcode,toString,getClass,wait,notify,notifyAll,clone
 	自动拆装箱：
 		将基础类型与包装类的转换
+	Java常用包:
+		Java.lang
+		Java.io
+		Java.sql
+		Java.util
+		Java.awt
+		Java.net
+		Java.math
+	IO流
+		InputStream
+			FileInputStream
+			BufferedInputStream
+		OutputStream
+			FileOutputStream
+			BufferedOutputStream
+		Reader
+			InputStreamReader
+				FileReader
+			BufferedReader
+		Writer
+			OutputStreamWriter
+				FileWriter
+			BufferedWriter
+			
 	接口
 		前言：接口定义了一种规范，接口定义了某一批类所需要遵守的规范，接口不关心这些类的内部状态数据，也不关心这些类里方法的实现细节，它只规定这批类里必须提供
 			某些方法，提供这些方法的类就可以满足实际需要；由于接口定义的是一种规范，因此接口里不能包含构造器和初始化块定义，接口里可以包含成员变量（只能是静
@@ -74,20 +100,6 @@ x		(7)接口里定义的内部类、内部接口、内部枚举类都默认采�
 		(5)抽象类和普通类一样，只能继承一个父类，但不能继承接口；接口可继承多个父接口，但不能继承类。
 		(6)一个类只能有一个直接父类，包括抽象类；但一个类可以实现多个接口，通过实现多个接口可以弥补Java单继承的不足。
 		
-	网络协议：
-		HTTP：超文本传输协议
-		FTP：文件传输协议
-		SMPT：简单邮件协议
-		TELNET：远程终端协议
-		POP3：邮件读取协议
-	Java常用包:
-		Java.lang
-		Java.io
-		Java.sql
-		Java.util
-		Java.awt
-		Java.net
-		Java.math
 	线程池
 		线程池的实现原理，这个知识点真的很重要，几乎每次面试都会被问到，一般的提问方式有如下几种
 	锁的实现
@@ -116,29 +128,7 @@ x		(7)接口里定义的内部类、内部接口、内部枚举类都默认采�
 		7，生产者消费者模型的理论
 			(1)平衡生产者的生产能力和消费者的消费能力，提高系统性能。
 			(2)解耦，降低生产者和消费者之间的联系及制约。
-	java 8红黑树的概念
 
-
-	
-IO流
-	InputStream
-		FileInputStream
-		BufferedInputStream
-	OutputStream
-		FileOutputStream
-		BufferedOutputStream
-	
-	Reader
-		InputStreamReader
-			FileReader
-		BufferedReader
-	Writer
-		OutputStreamWriter
-			FileWriter
-		BufferedWriter
-
-	做过的项目
-		Trading， 平安汽融
 	自己定义拦截器
 		实现接口,另外一种是继承适配器类 HandlerInterceptorAdapter
 	SpringMvc处理返回值
@@ -168,11 +158,10 @@ IO流
 		transactionManager
 	Mybatis配置
 		SqlSessionFactoryBean
-	Trading邮件发送
 	IOC
 		传统我们通过new来创建一个对象，现在由spring容器帮我们依赖注入对象，即由原先的人为控制转为容器控制。
 	AOP
-		优点自然还是提高效率，AOP将业务逻辑各部分进行划分隔离，提高程序可重用性。例如通过AOP可将日志、事物等从业务逻辑层抽取出来(省去传统的繁琐)
+		优点提高效率，AOP将业务逻辑各部分进行划分隔离，提高程序可重用性。例如通过AOP可将日志、事物等从业务逻辑层抽取出来(省去传统的繁琐)
 	进程和线程
 		进程：是系统分配和管理资源的基本单位，它包含若干个线程
 		线程：是进程的组成部分
@@ -190,7 +179,7 @@ IO流
 			静态编译：在编译时确定类型，绑定对象
 			动态编译：在运行时确定类型，绑定对象
 		优点：可以动态创建对象和编译，提高代码灵活性
-		有点举例：一个大型项目，程序编译且发布后，需要更新某新功能，此时不可能卸载老版本，重新装新版本。可采用反射机制动态创建和编译。
+		优点举例：一个大型项目，程序编译且发布后，需要更新某新功能，此时不可能卸载老版本，重新装新版本。可采用反射机制动态创建和编译。
 		缺点：使用反射机制是一种解释操作，让jvm按照要求操作，这比直接执行相同的操作要慢，故影响性能
 	Redis:
 		1，是一个key-value的内存数据库，减少磁盘I/O读写，读写非常快，异步将数据保存到磁盘中，故有快速和持久化得特征。
@@ -210,6 +199,8 @@ IO流
 			allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰
 			allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰
 			no-enviction（驱逐）：禁止驱逐数据
+		9，使用场景
+			会话缓存、队列、排行榜/计数器、发布/订阅
 			
 	springMVC启动流程
 		简单分为两个初始化
@@ -236,11 +227,15 @@ IO流
 		10，中央控制器将view渲染响应给用户
 	JVM
 		1，内部体系结构分三部分：类装载器(ClassLoader)子系统，运行时数据区，执行引擎
+			(1)类装载器，负责加载程序中的类和接口，并赋予唯一的名字；每个jvm都有一个执行引擎来执行被加载类的指令
 		2，运行时数据区包括：方法区、堆、java栈、本地方法栈、PC寄存器
 			(1)方法区和堆由所有线程共享
+				堆：存放所有程序运行时创建的对象
+				方法区：存放了加载类的信息(名称、修饰符等)、类中静态变量、final常量、类中的Field信息、类中的方法信息；
+					在一定条件下也会被GC，当方法区域需要使用的内存超过其允许的大小时，会抛出OutOfMemory的错误信息。
 			(2)java栈和PC寄存器由线程独享
 	GC：GC在什么时候，对什么东西，做了什么事情？
-		1，minor gc：eden满了；full gc：升到老年代的对象大于老年代剩余空间等
+		1，minor gc：eden满了，对新生代GC；full gc：升到老年代的对象大于老年代剩余空间等，对老年代GC
 		2，GC roots不可达的对象，即对象到GC roots没有任何引用链链接；可做GC roots的对象有：
 			(1)虚拟机栈（栈帧中的本地变量表）中的引用的对象
 			(2)方法区中的类静态属性引用的对象
@@ -276,6 +271,12 @@ IO流
 			map1.forEach((key,value) -> System.out.println("key="+key+";value="+value));
 		
 		
+	网络协议：
+		HTTP：超文本传输协议
+		FTP：文件传输协议
+		SMPT：简单邮件协议
+		TELNET：远程终端协议
+		POP3：邮件读取协议
 		
 		
 		
