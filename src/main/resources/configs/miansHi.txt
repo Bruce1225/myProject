@@ -91,7 +91,31 @@ x		(7)接口里定义的内部类、内部接口、内部枚举类都默认采�
 	线程池
 		线程池的实现原理，这个知识点真的很重要，几乎每次面试都会被问到，一般的提问方式有如下几种
 	锁的实现
-		在关于锁的面试过程中，一般主要问Synchronized和ReentrantLock的实现原理，更有甚者会问读写锁
+		0，在关于锁的面试过程中，一般主要问Synchronized和ReentrantLock的实现原理，更有甚者会问读写锁
+			(1)Synchronized是关键字，ReentrantLock是类；故ReentrantLock更灵活。
+			(2)ReentrantLock灵活表现：可以对获取锁的等待时间进行设置，这样就避免了死锁；可以获取各种锁的信息。
+		1，悲观锁：每次拿数据都认为别人会修改数据，所以每次拿都要加上锁。synchronized和传统的关系型数据库都是悲观锁
+		       乐观锁：每次拿数据都认为别人不会修改数据，所以每次拿都不加锁，但在修改数据时会判断数据是否被修改。CAS是乐观锁
+		2， CAS	(compare and swap)
+		  	(1)原理：告诉我位置V的当前位置是否是A，如果是则将值更改为B，否则不做处理并告诉我位置V的当前值。
+		  	(2)缺陷：
+		  		ABA问题；
+		  		自旋开销大，即不成功会一直执行，直到成功。
+		  	(3)对比synchronized使用场景：
+		  		对于竞争资源较严重时，CAS自旋概率大，消耗资源多，故其效率低于synchronized；反之CAS效率高。
+		3，volatile
+			与synchronized相比，它是轻量级的，修饰共享变量，将变量保存到主内存(main memory)中，保证共享变量对所有线程的可见性。
+		4，synchronized
+			(1)修饰代码块 	synchronized(this){...}
+			(2)修饰方法	public synchronized static void method() {...}
+			(3)修改类		synchronized(SyncTest2.class) {...}
+		5，线程安全
+			如果代码在多线程下执行和在单线程下执行永远都能获得一样的结果，那么这个代码就是线程安全的
+		6，sleep方法和wait方法有什么区别
+			都是放弃CPU一段时间，但sleep是不会放弃这个对象的监视器，即是抱着锁睡觉的，其它线程是获取不到资源的；wait会立即放弃对象的监视器。
+		7，生产者消费者模型的理论
+			(1)平衡生产者的生产能力和消费者的消费能力，提高系统性能。
+			(2)解耦，降低生产者和消费者之间的联系及制约。
 	java 8红黑树的概念
 
 
@@ -121,6 +145,12 @@ IO流
 		配置文件中InternalResourceViewResolver的前缀和后缀
 	当一个方法向AJAX返回特殊对象
 		加上@ResponseBody注解
+	error和exception有什么区别：  
+		error表示恢复不是不可能但很困难的情况下的一种严重问题。比如说内存溢出。不可能指望程序能处理这样的情况；
+		exception表示一种设计或实现问题。也就是说，它表示如果程序运行正常，从不会发生的情况。
+	swtich是否能作用在byte上，是否能作用在long上，是否能作用在String上？
+		switch（expr1）中，expr1是一个整数表达式。因此传递给 switch 和 case 语句的参数应该是 int、 short、 char 或者 byte。
+		long,string 都不能作用于swtich。
 	并发、并行区别
 		并发：多个线程被一个CPU执行
 		并行：多个线程被多个CPU执行
@@ -204,7 +234,11 @@ IO流
 		9，中央控制器再找到视图解析器ViewReslover
 		10，viewReslover解析后返回具体View到中央控制器
 		10，中央控制器将view渲染响应给用户
-
+	JVM
+		1，内部体系结构分三部分：类装载器(ClassLoader)子系统，运行时数据区，执行引擎
+		2，运行时数据区包括：方法区、堆、java栈、本地方法栈、PC寄存器
+			(1)方法区和堆由所有线程共享
+			(2)java栈和PC寄存器由线程独享
 	GC：GC在什么时候，对什么东西，做了什么事情？
 		1，minor gc：eden满了；full gc：升到老年代的对象大于老年代剩余空间等
 		2，GC roots不可达的对象，即对象到GC roots没有任何引用链链接；可做GC roots的对象有：
