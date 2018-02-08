@@ -50,7 +50,19 @@ https://cm.dulux.com.cn/login.jsp
 			OutputStreamWriter
 				FileWriter
 			BufferedWriter
-			
+	
+	
+	Java中的HashMap的工作原理是什么？
+		Java中的HashMap是以键值对(key-value)的形式存储元素的。HashMap需要一个hash函数，它使用hashCode()和equals()方法来向集合/从集合添加和
+		检索元素。当调用put()方法的时候，HashMap会计算key的hash值，然后把键值对存储在集合中合适的索引上。如果key已经存在了，value会被更新成新值。
+	数组(Array)和列表(ArrayList)有什么区别？什么时候应该使用Array而不是ArrayList？
+		1，Array可以包含基本类型和对象类型，ArrayList只能包含对象类型。
+		2，Array大小是固定的，ArrayList的大小是动态变化的。
+		3，ArrayList提供了更多的方法和特性，比如：addAll()，removeAll()，iterator()等等。
+		4，对于基本类型数据，集合使用自动装箱来减少编码工作量。但是，当处理固定大小的基本数据类型的时候，这种方式相对比较慢。
+		5，数组最适合的场合是多维数组，arraylist用多维的话，非常麻烦。
+	finalize()方法什么时候被调用？析构函数(finalization)的目的是什么？
+		在释放对象占用的内存之前，垃圾收集器会调用对象的finalize()方法。一般建议在该方法中释放对象持有的资源。
 	接口
 		前言：接口定义了一种规范，接口定义了某一批类所需要遵守的规范，接口不关心这些类的内部状态数据，也不关心这些类里方法的实现细节，它只规定这批类里必须提供
 			某些方法，提供这些方法的类就可以满足实际需要；由于接口定义的是一种规范，因此接口里不能包含构造器和初始化块定义，接口里可以包含成员变量（只能是静
