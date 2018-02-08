@@ -19,10 +19,13 @@ https://cm.dulux.com.cn/login.jsp
 	java8
 	其它：数据源技术
 	
-	
-	
 	做过的项目
 		Trading， 平安汽融
+	字节
+		1B（byte，字节）= 8 bit
+		ASCII码：一个英文字母（不分大小写）占一个字节的空间，一个中文汉字占两个字节的空间
+		Unicode编码：一个英文等于两个字节，一个中文（含繁体）等于两个字节
+		UTF-8编码：一个英文字符等于一个字节，一个中文（含繁体）等于三个字节
 	Object常用方法：
 		equals,hashcode,toString,getClass,wait,notify,notifyAll,clone
 	自动拆装箱：
@@ -51,7 +54,87 @@ https://cm.dulux.com.cn/login.jsp
 				FileWriter
 			BufferedWriter
 	
-	
+	jsp有哪些内置对象?作用分别是什么： 
+		application servlet 正在执行的内容 
+		session 与请求有关的会话期 
+		request 用户端请求，此请求会包含来自GET/POST请求的参数 
+		response 网页传回用户端的回应 
+		pageContext 网页的属性是在这里管理 
+		out 用来传送回应的输出 
+		config servlet的构架部件 
+		page JSP网页本身 
+		exception 针对错误网页，未捕捉的例外。
+	Request对象的主要方法：
+		setAttribute(String name,Object)：设置名字为name的request的参数值
+		getAttribute(String name)：返回由name指定的属性值
+		getAttributeNames()：返回request对象所有属性的名字集合，结果是一个枚举的实例
+		getCookies()：返回客户端的所有Cookie对象，结果是一个Cookie数组
+		getCharacterEncoding()：返回请求中的字符编码方式
+		getContentLength()：返回请求的Body的长度
+		getHeader(String name)：获得HTTP协议定义的文件头信息
+		getHeaders(String name)：返回指定名字的request Header的所有值，结果是一个枚举的实例
+		getHeaderNames()：返回所以request Header的名字，结果是一个枚举的实例
+		getInputStream()：返回请求的输入流，用于获得请求中的数据
+		getMethod()：获得客户端向服务器端传送数据的方法
+		getParameter(String name)：获得客户端传送给服务器端的有name指定的参数值
+		getParameterNames()：获得客户端传送给服务器端的所有参数的名字，结果是一个枚举的实例
+		getParameterValues(String name)：获得有name指定的参数的所有值
+		getProtocol()：获取客户端向服务器端传送数据所依据的协议名称
+		getQueryString()：获得查询字符串
+		getRequestURI()：获取发出请求字符串的客户端地址
+		getRemoteAddr()：获取客户端的IP地址
+		getRemoteHost()：获取客户端的名字
+		getSession([Boolean create])：返回和请求相关Session
+		getServerName()：获取服务器的名字
+		getServletPath()：获取客户端所请求的脚本文件的路径
+		getServerPort()：获取服务器的端口号
+		removeAttribute(String name)：删除请求中的一个属性
+			
+	char型变量中能不能存贮一个中文汉字?为什么： 
+		是能够定义成为一个中文的，因为java中以unicode编码，一个char占16个字节，所以放一个中文是没问题的。
+	java中是值传递引用传递？
+		java都是引用传递，对于基本数据类型，传递是值的副本，而不是值本身。
+		对于对象类型，传递是对象的引用，当在一个方法操作操作参数的时候，其实操作的是引用所指向的对象。
+	String类的常用方法有那些？
+		charAt：返回指定索引处的字符
+		indexOf()：返回指定字符的索引
+		replace()：字符串替换
+		trim()：去除字符串两端空白
+		split()：分割字符串，返回一个分割后的字符串数组
+		getBytes()：返回字符串的byte类型数组
+		length()：返回字符串长度
+		toLowerCase()：将字符串转成小写字母
+		toUpperCase()：将字符串转成大写字符
+		substring()：截取字符串
+		format()：格式化字符串
+		equals()：字符串比较
+	当父类引用指向子类对象的时候，访问的属性是父类的属性，调用的方法是子类的方法
+*	说一说Servlet的生命周期： 
+		servlet有良好的生存期的定义，包括加载和实例化、初始化、处理请求以及服务结束。这个生存期由javax.servlet.Servlet接口的init,service和destroy方法表达。
+	servlet执行流程
+		客户端发出http请求，web服务器将请求转发到servlet容器，servlet容器解析url并根据web.xml找到相对应的servlet，并将request、response对象传递
+		给找到的servlet，servlet根据request就可以知道是谁发出的请求，请求信息及其他信息，当servlet处理完业务逻辑后会将信息放入到response并响应到客户端。
+？	你在项目中用到了xml技术的哪些方面?如何实现的： 
+		用到了数据存贮，信息配置两方面。在做数据交换平台时，将不能数据源的数据组装成XML文件，然后将XML文件压缩打包加密后通过网络传送给接收者，接收解密与解压缩后再同XML文
+		件中还原相关信息进行处理。在做软件配置时，利用XML可以很方便的进行，软件的各种配置参数都存贮在XML文件中。
+*	常用的23种设计模式？说明工厂模式： 
+		1，Factory（工厂模式），Builder（建造模式）， Factory Method（工厂方法模式），Prototype（原始模型模式），Singleton（单例模式）， 
+		Facade（门面模式），Adapter（适配器模式）， Bridge（桥梁模式）， Composite（合成模式），Decorator（装饰模式）， Flyweight（享元模式），
+		Proxy（代理模式），Command（命令模式）， Interpreter（解释器模式）， Visitor（访问者模式），Iterator（迭代子模式）， Mediator（调停者模式），
+		Memento（备忘录模式），Observer（观察者模式），State（状态模式），Strategy（策略模式），Template Method（模板方法模式），
+		Chain Of Responsibleity（责任链模式）。
+		2，工厂模式：工厂模式是一种经常被使用到的模式，根据工厂模式实现的类可以根据提供的数据生成一组类中某一个类的实例，通常这一组类有一个公共的抽象父类并且实现了相同的方法，
+		但是这些方法针对不同的数据进行了不同的操作。首先需要定义一个基类，该类的子类通过不同的方法实现了基类中的方法。然后需要定义一个工厂类，工厂类可以根据条件生成不同的子
+		类实例。当得到子类的实例后，开发人员可以调用基类中的方法而不必考虑到底返回的是哪一个子类的实例。
+		a) 单例模式：单例模式核心只需要new一个实例对象的模式，比如数据库连接，在线人数等，一些网站上看到的在线人数统计就是通过单例模式实现的，把一个计时器存放在数据库或者
+		内存中，当有人登陆的时候取出来加一再放回去，有人退出登陆的时候取出来减一再放回去，但是当有两个人同时登陆的时候，会同时取出计数器，同时加一，同时放回去，这样的话数据就
+		会错误，所以需要一个全局变量的对象给全部人使用，只需要new出一个实例对象，这就是单例模式的应用，并且单例模式节省资源，因为它控制了实例对象的个数，并有利于gc回收。
+		b) 策略模式：就是将几个类中公共的方法提取到一个新的类中，从而使扩展更容易，保证代码的可移植性，可维护性强。比如有个需求是写鸭子对象，鸭子有叫，飞，外形这三种方法，
+		如果每个鸭子类都写这三个方法会出现代码的冗余，这时候我们可以把鸭子中的叫，飞，外形这三个方法提取出来，放到鸭父类中，让每个鸭子都继承这个鸭父类，重写这三个方法，这样封
+		装的代码可移植性强，当用户提出新的需求比如鸭子会游泳，那么对于我们oo程序员来讲就非常简单了我们只需要在鸭父类中加一个游泳的方法，让会游泳的鸭子重写游泳方法就可以了。
+		c) 工厂模式：简单的工厂模式主要是统一提供实例对象的引用，通过工厂模式接口获取实例对象的引用。比如一个登陆功能，后端有三个类，controller类，interface类，
+		实现接口的实现类。当客户端发出一个请求，当请求传到controller类中时，controller获取接口的引用对象，而实现接口的实现类中封装好了登陆的业务逻辑代码。当你需要
+		加一个注册需求的时候只需要在接口类中加一个注册方法，实现类中实现方法，controller获取接口的引用对象即可，不需要改动原来的代码，这种做法是的可拓展性强。
 	Java中的HashMap的工作原理是什么？
 		Java中的HashMap是以键值对(key-value)的形式存储元素的。HashMap需要一个hash函数，它使用hashCode()和equals()方法来向集合/从集合添加和
 		检索元素。当调用put()方法的时候，HashMap会计算key的hash值，然后把键值对存储在集合中合适的索引上。如果key已经存在了，value会被更新成新值。
@@ -63,6 +146,32 @@ https://cm.dulux.com.cn/login.jsp
 		5，数组最适合的场合是多维数组，arraylist用多维的话，非常麻烦。
 	finalize()方法什么时候被调用？析构函数(finalization)的目的是什么？
 		在释放对象占用的内存之前，垃圾收集器会调用对象的finalize()方法。一般建议在该方法中释放对象持有的资源。
+	Collection和Collections的区别：
+		Collections是个java.util下的类，它包含有各种有关集合操作的静态方法。 
+		Collection是个java.util下的接口，它是各种集合结构的父接口。
+	error和exception有什么区别：  
+		1，Error和Exception都是java错误处理机制的一部分，都继承了Throwable类。
+		2，error，表示恢复不是不可能但很困难的情况下的一种严重问题。比如说内存溢出。不可能指望程序能处理这样的情况； 
+		3，exception，表示一种设计或实现问题。也就是说，它表示如果程序运行正常，从不会发生的情况。
+	给我一个你最常见到的runtime exception：   
+		NullPointerException, ClassCastException, IndexOutOfBoundsException, ArithmeticException, 
+		ArrayStoreException, BufferOverflowException, BufferUnderflowException, CannotRedoException, 
+		CannotUndoException, CMMException,  ConcurrentModificationException,  DOMException,  
+		EmptyStackException, IllegalArgumentException, IllegalMonitorStateException, 
+		IllegalPathStateException, IllegalStateException,  ImagingOpException,   
+		MissingResourceException,  NegativeArraySizeException, NoSuchElementException, 
+		ProfileDataException, ProviderException, RasterFormatException, 
+		SecurityException, SystemException, UndeclaredThrowableException, UnmodifiableSetException, 
+		UnsupportedOperationException。
+	使用连接池有什么好处？
+		数据库连接是非常消耗资源的，影响到程序的性能指标。连接池是用来分配、管理、释放数据库连接的，可以使应用程序重复使用同一个数据库连接，而不是每次都创建
+		一个新的数据库连接。通过释放空闲时间较长的数据库连接避免数据库因为创建太多的连接而造成的连接遗漏问题，提高了程序性能。
+	事物的理解
+		事物具有原子性，一致性，持久性，隔离性
+		1)原子性：是指在一个事物中，要么全部执行成功，要么全部失败回滚
+		2)一致性：事物执行之前和执行之后都处于一致性状态
+		3)持久性：事物多数据的操作是永久性
+		4)隔离性：当一个事物正在对数据进行操作时，另一个事物不可以对数据进行操作，也就是多个并发事物之间相互隔离。
 	接口
 		前言：接口定义了一种规范，接口定义了某一批类所需要遵守的规范，接口不关心这些类的内部状态数据，也不关心这些类里方法的实现细节，它只规定这批类里必须提供
 			某些方法，提供这些方法的类就可以满足实际需要；由于接口定义的是一种规范，因此接口里不能包含构造器和初始化块定义，接口里可以包含成员变量（只能是静
@@ -111,7 +220,16 @@ x		(7)接口里定义的内部类、内部接口、内部枚举类都默认采�
 		(4)接口里不能包含初始化块；但抽象类则可以完全包含初始化块
 		(5)抽象类和普通类一样，只能继承一个父类，但不能继承接口；接口可继承多个父接口，但不能继承类。
 		(6)一个类只能有一个直接父类，包括抽象类；但一个类可以实现多个接口，通过实现多个接口可以弥补Java单继承的不足。
-		
+	
+	线程的几种可用状态。
+		线程在执行过程中，可以处于下面几种状态：
+		就绪(Runnable):线程准备运行，不一定立马就能开始执行。
+		运行中(Running)：进程正在执行线程的代码。
+		等待中(Waiting):线程处于阻塞的状态，等待外部的处理结束。
+		睡眠中(Sleeping)：线程被强制睡眠。
+		I/O阻塞(Blocked on I/O)：等待I/O操作完成。
+		同步阻塞(Blocked on Synchronization)：等待获取锁。
+		死亡(Dead)：线程完成了执行。	
 	线程池
 		线程池的实现原理，这个知识点真的很重要，几乎每次面试都会被问到，一般的提问方式有如下几种
 	锁的实现
@@ -176,12 +294,20 @@ x		(7)接口里定义的内部类、内部接口、内部枚举类都默认采�
 		优点提高效率，AOP将业务逻辑各部分进行划分隔离，提高程序可重用性。例如通过AOP可将日志、事物等从业务逻辑层抽取出来(省去传统的繁琐)
 	进程和线程
 		进程：是系统分配和管理资源的基本单位，它包含若干个线程
-		线程：是进程的组成部分
+		线程：线程是CPU调度和分派的基本单位，是进程的组成部分
+		区别：
+			(1)调度：线程作为调度和分配的基本单位，进程作为拥有资源的基本单位。
+			(2)并发性：不仅进程之间可以并发执行，同一个进程的多个线程之间也可以并发执行。
+			(3)拥有资源：进程是拥有资源的一个独立单位，线程不拥有系统资源，但可以访问隶属于进程的资源。
+			(4)系统开销：在创建或撤销进程的时候，由于系统都要为之分配和回收资源，导致系统的明显大于创建或撤销线程时的开销。但进程有独立的地址空间，进程
+			         崩溃后，在保护模式下不会对其他的进程产生影响，而线程只是一个进程中的不同的执行路径。线程有自己的堆栈和局部变量，但线程之间没有单独的地址
+			         空间，一个线程死掉就等于整个进程死掉，所以多进程的程序要比多线程的程序健壮，但是在进程切换时，耗费的资源较大，效率要差些。
 	序列化和反序列化
 		1，通过实现接口Serializable来序列化，使用ObjectInputStream 实现反序列化；
 		2，序列化是将java对象和一串二进制字节流之间做转换，java对象只存在jvm中，当程序退出时，这些对象也就消失，而序列化则是将这些对象保存到磁盘
 		       中，以备使用。
 	反射机制
+		(除了使用new创建对象之外，还可以用反射创建对象)
 		定义：指程序在运行时可检测、修改或调整自身状态或行为的一种能力，在java中，只要给出类的名称，便可以访问类的所有属性；
 		作用：
 			(1)在运行时可检测任意对象所属的类；
@@ -236,16 +362,33 @@ x		(7)接口里定义的内部类、内部接口、内部枚举类都默认采�
 		8，处理器适配器将结果返回给中央控制器
 		9，中央控制器再找到视图解析器ViewReslover
 		10，viewReslover解析后返回具体View到中央控制器
-		10，中央控制器将view渲染响应给用户
+		11，中央控制器将view渲染响应给用户
+	类加载的过程
+		遇到一个新的类时，首先会到方法区去找class文件，如果没有找到就会去硬盘中找class文件，找到后会返回，将class文件加载到方法区中，在类加载的时候，静态成员变量会被
+		分配到方法区的静态区域，非静态成员变量分配到非静态区域，然后开始给静态成员变量初始化，赋默认值，赋完默认值后，会根据静态成员变量书写的位置赋显示值，然后执行静态代码。
+		当所有的静态代码执行完，类加载才算完成。
+	对象的创建
+		a)遇到一个新类时，会进行类的加载，定位到class文件
+		b)对所有静态成员变量初始化，静态代码块也会执行，而且只在类加载的时候执行一次
+		c)New 对象时，jvm会在堆中分配一个足够大的存储空间
+		d)存储空间清空，为所有的变量赋默认值，所有的对象引用赋值为null
+		e)根据书写的位置给字段一些初始化操作
+		f)调用构造器方法（没有继承）
 	JVM
-		1，内部体系结构分三部分：类装载器(ClassLoader)子系统，运行时数据区，执行引擎
-			(1)类装载器，负责加载程序中的类和接口，并赋予唯一的名字；每个jvm都有一个执行引擎来执行被加载类的指令
-		2，运行时数据区包括：方法区、堆、java栈、本地方法栈、PC寄存器
+		前言：内部体系结构分三部分：类装载器(ClassLoader)子系统，运行时数据区，执行引擎
+		1，类装载器，负责加载程序中的类和接口，并赋予唯一的名字
+		2，执行引擎，每个jvm都有一个执行引擎来执行被加载类的指令
+		3，运行时数据区包括：方法区、堆、java栈、本地方法栈、PC寄存器
 			(1)方法区和堆由所有线程共享
 				堆：存放所有程序运行时创建的对象
-				方法区：存放了加载类的信息(名称、修饰符等)、类中静态变量、final常量、类中的Field信息、类中的方法信息；
-					在一定条件下也会被GC，当方法区域需要使用的内存超过其允许的大小时，会抛出OutOfMemory的错误信息。
+					Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+				方法区：即为永久带，存放了加载类的信息(名称、修饰符等)、类中静态变量、final常量、类中的Field信息、类中的方法信息；
+					在一定条件下也会被GC(废弃常量和无用类)，当方法区域需要使用的内存超过其允许的大小时，会抛出OutOfMemory的错误信息。
+					Exception in thread "main" java.lang.OutOfMemoryError: PermGen space
 			(2)java栈和PC寄存器由线程独享
+				栈：是存放线程调用方法时存储局部变量表，操作，方法出口等与方法执行相关的信息
+					Exception in thread "main" java.lang.StackOverflowError
+			(3)本地方法栈，存储本地方法调用的状态
 	GC：GC在什么时候，对什么东西，做了什么事情？
 		1，minor gc：eden满了，对新生代GC；full gc：升到老年代的对象大于老年代剩余空间等，对老年代GC
 		2，GC roots不可达的对象，即对象到GC roots没有任何引用链链接；可做GC roots的对象有：

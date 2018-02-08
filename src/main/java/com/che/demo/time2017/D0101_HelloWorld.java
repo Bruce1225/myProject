@@ -9,6 +9,10 @@ public class D0101_HelloWorld {
 //		System.out.println("\u27665");
 //		System.out.println("\u20849");
 		System.out.println(' ');
+		
+		double x,y;
+		x=2;y=x+3/2;
+		System.out.println(y);
+		
 	}
-
 }
